@@ -1,4 +1,3 @@
-"use client";
 
 import { CreateStandForm } from "@/models/StandForm";
 
