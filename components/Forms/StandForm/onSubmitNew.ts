@@ -2,6 +2,7 @@ import { CreateStandForm } from '@/models/StandForm';
 import { UserI } from '@/models/User';
 import { SubmitHandler, UseFormReset } from 'react-hook-form';
 import { computeScore } from './computeScore';
+import { deleteLocalSave, saveLocal } from './saveLocal';
 
 type StandFormOnSubmit = (
 	create: boolean,
@@ -40,15 +41,12 @@ export const onSubmit: StandFormOnSubmit = (
 				setSubmitting('done');
 				if (res.ok) reset();
 			});
+			deleteLocalSave(data.matchNumber, data.teamNumber);
 		} else {
 			setSubmitting('fetching');
 			// if user is offline
-			const savedForms: CreateStandForm[] = JSON.parse(
-				sessionStorage.getItem('standForms') || '[]', // use saved forms or a new array
-			);
-			savedForms.push({ ...data, scouter: user._id, scoutScore: computeScore(data) });
-			sessionStorage.setItem('standForms', JSON.stringify(savedForms));
-			setSubmitting('done');
+			saveLocal(data);
+			alert("Saved locally. You can submit your form when you are online.")
 			reset();
 		}
 	};
